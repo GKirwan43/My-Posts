@@ -5,7 +5,7 @@ import { links } from "@/utils/contants";
 
 interface props {
   isNavOpen: boolean;
-  toggleNav: () => {};
+  toggleNav: () => void;
 }
 
 const Header = ({ isNavOpen, toggleNav }: props) => {
