@@ -1,25 +1,24 @@
-import "@mantine/core/styles.css";
-import { MantineProvider, ColorSchemeScript } from "@mantine/core";
-import Navbar from "@/components/navigation/Navbar";
-import { theme } from "@/lib/mantine/theme";
+"use client";
 
-export const metadata = {
-  title: "My Posts",
-  description: "Post app",
-};
+import Navbar from "@/components/navigation/Navbar";
+import { useAuthContext } from "@/context/AuthContextProvider";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+  const { user }: any = useAuthContext();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (user) {
+      router.push("/dashboard");
+    }
+  }, [user]);
+
   return (
-    <html lang="en">
-      <head>
-        <ColorSchemeScript />
-      </head>
-      <body>
-        <MantineProvider theme={theme}>
-          <Navbar />
-          <main>{children}</main>
-        </MantineProvider>
-      </body>
-    </html>
+    <>
+      <Navbar />
+      <main>{children}</main>
+    </>
   );
 }

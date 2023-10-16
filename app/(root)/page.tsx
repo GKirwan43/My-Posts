@@ -1,5 +1,6 @@
 "use client";
 
+import { links } from "@/utils/contants";
 import { Button, Center, Container, Stack, Text, Title } from "@mantine/core";
 import { useViewportSize } from "@mantine/hooks";
 import Link from "next/link";
@@ -17,7 +18,7 @@ export default function Home() {
           <Title order={2} ta="center">
             The self journal posting application.
           </Title>
-          <Button component={Link} href="/register">
+          <Button component={Link} href={links.signup}>
             Create Account
           </Button>
         </Stack>
