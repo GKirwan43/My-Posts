@@ -15,9 +15,6 @@ const Header = ({ isNavOpen, toggleNav }: props) => {
         <Burger hiddenFrom="sm" opened={isNavOpen} onClick={toggleNav} />
         <Logo href={links.dashboard} />
       </Group>
-      <Button variant="default" onClick={signOut}>
-        Logout
-      </Button>
     </Group>
   );
 };

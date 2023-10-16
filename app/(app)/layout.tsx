@@ -1,6 +1,7 @@
 "use client";
 
 import Header from "@/components/Header";
+import AppNavbar from "@/components/navigation/AppNavbar";
 import { useAuthContext } from "@/context/AuthContextProvider";
 import { AppShell, Burger } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
@@ -19,11 +20,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   }, [user]);
 
   return (
-    <AppShell padding="md" header={{ height: 60 }} navbar={{ width: 300, breakpoint: "sm", collapsed: { mobile: !navOpened } }}>
+    <AppShell padding="md" header={{ height: 60 }} navbar={{ width: { sm: 250, lg: 300 }, breakpoint: "sm", collapsed: { mobile: !navOpened } }}>
       <AppShell.Header>
         <Header isNavOpen={navOpened} toggleNav={toggleNav} />
       </AppShell.Header>
-      <AppShell.Navbar></AppShell.Navbar>
+      <AppShell.Navbar>
+        <AppNavbar />
+      </AppShell.Navbar>
       <AppShell.Main>{children}</AppShell.Main>
     </AppShell>
   );
