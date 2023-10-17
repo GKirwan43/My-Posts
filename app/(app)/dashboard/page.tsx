@@ -11,7 +11,7 @@ const User = () => {
   return (
     user && (
       <>
-        <p>Hello, {user.email}</p>
+        <p>Hello, {user.displayName}</p>
         <button onClick={signOut}>Sign out</button>
       </>
     )

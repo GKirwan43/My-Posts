@@ -28,7 +28,7 @@ const Register = () => {
   // Functions
 
   const handleSubmit = async (values: any) => {
-    const { error }: any = await signUp(values.email, values.password);
+    const { error }: any = await signUp(values.username, values.email, values.password);
 
     if (error) {
       if (error.code === "auth/email-already-in-use") {
