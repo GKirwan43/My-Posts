@@ -1,12 +1,23 @@
 "use client";
 
-import { Button, Card, Center, Divider, Group, PasswordInput, Stack, TextInput, Title, rem } from "@mantine/core";
+import {
+  Button,
+  Card,
+  Center,
+  Divider,
+  Group,
+  PasswordInput,
+  Stack,
+  TextInput,
+  Title,
+  rem,
+} from "@mantine/core";
 import { hasLength, useForm } from "@mantine/form";
 import { useDisclosure, useViewportSize } from "@mantine/hooks";
 import { IconAt } from "@tabler/icons-react";
 import signIn from "@/lib/firebase/auth/signin";
 import { useRouter } from "next/navigation";
-import { links } from "@/utils/contants";
+import { links } from "@/lib/utils/contants";
 
 const Register = () => {
   // Hooks
@@ -14,6 +25,10 @@ const Register = () => {
   const [visible, { toggle }] = useDisclosure(false);
   const router = useRouter();
   const form = useForm({
+    initialValues: {
+      email: "",
+      password: "",
+    },
     validate: {
       email: hasLength({ min: 1 }, "Email required."),
       password: hasLength({ min: 1 }, "Password required."),
@@ -29,11 +44,20 @@ const Register = () => {
     const { error }: any = await signIn(values.email, values.password);
 
     if (error) {
-      console.log(error.code);
-      if (error.code === ("auth/invalid-login-credentials" || "auth/invalid-email")) {
-        form.setErrors({ email: " ", password: "Email or password Incorrect." });
+      if (
+        error.code === "auth/invalid-login-credentials" ||
+        error.code === "auth/invalid-email"
+      ) {
+        form.setErrors({
+          email: " ",
+          password: "Email or password Incorrect.",
+        });
       } else if (error.code === "auth/too-many-requests") {
-        form.setErrors({ email: " ", password: "Access to this account has been temporarily disabled due to many failed login attempts. You can immediately restore it by resetting your password or you can try again later." });
+        form.setErrors({
+          email: " ",
+          password:
+            "Access to this account has been temporarily disabled due to many failed login attempts. You can immediately restore it by resetting your password or you can try again later.",
+        });
       }
 
       return console.log(error);
@@ -55,8 +79,21 @@ const Register = () => {
           })}
         >
           <Stack gap="sm">
-            <TextInput label="Email" leftSection={email_icon} placeholder="Your email here" withAsterisk {...form.getInputProps("email")} />
-            <PasswordInput label="Password" placeholder="Your password here" visible={visible} onVisibilityChange={toggle} withAsterisk {...form.getInputProps("password")} />
+            <TextInput
+              label="Email"
+              leftSection={email_icon}
+              placeholder="Your email here"
+              withAsterisk
+              {...form.getInputProps("email")}
+            />
+            <PasswordInput
+              label="Password"
+              placeholder="Your password here"
+              visible={visible}
+              onVisibilityChange={toggle}
+              withAsterisk
+              {...form.getInputProps("password")}
+            />
           </Stack>
           <Group justify="center" mt={20}>
             <Button type="submit">Login</Button>

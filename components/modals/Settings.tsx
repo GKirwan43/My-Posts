@@ -1,6 +1,13 @@
 "use client";
 
-import { Modal, Switch, Button, Stack, Flex, useMantineColorScheme } from "@mantine/core";
+import {
+  Modal,
+  Switch,
+  Button,
+  Stack,
+  Flex,
+  useMantineColorScheme,
+} from "@mantine/core";
 import { useForm } from "@mantine/form";
 
 interface props {
@@ -35,7 +42,10 @@ const Settings = ({ opened, close }: props) => {
     <Modal opened={opened} onClose={close} title="Settings" centered>
       <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
         <Stack align="flex-start">
-          <Switch label="Dark mode" {...form.getInputProps("darkMode", { type: "checkbox" })} />
+          <Switch
+            label="Dark mode"
+            {...form.getInputProps("darkMode", { type: "checkbox" })}
+          />
           <Flex justify="flex-end" w="100%">
             <Button type="submit">Save</Button>
           </Flex>

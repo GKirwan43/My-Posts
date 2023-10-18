@@ -1,4 +1,4 @@
-import { links } from "@/utils/contants";
+import { links } from "@/lib/utils/contants";
 import { Text } from "@mantine/core";
 import Link from "next/link";
 

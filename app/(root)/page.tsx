@@ -1,6 +1,6 @@
 "use client";
 
-import { links } from "@/utils/contants";
+import { links } from "@/lib/utils/contants";
 import { Button, Center, Container, Stack, Text, Title } from "@mantine/core";
 import { useViewportSize } from "@mantine/hooks";
 import Link from "next/link";

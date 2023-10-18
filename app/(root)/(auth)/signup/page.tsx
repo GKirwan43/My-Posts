@@ -1,12 +1,23 @@
 "use client";
 
-import { Button, Card, Center, Divider, Group, PasswordInput, Stack, TextInput, Title, rem } from "@mantine/core";
+import {
+  Button,
+  Card,
+  Center,
+  Divider,
+  Group,
+  PasswordInput,
+  Stack,
+  TextInput,
+  Title,
+  rem,
+} from "@mantine/core";
 import { useForm, hasLength, isEmail, matchesField } from "@mantine/form";
 import { useDisclosure, useViewportSize } from "@mantine/hooks";
 import { IconAt } from "@tabler/icons-react";
 import signUp from "@/lib/firebase/auth/signup";
 import { useRouter } from "next/navigation";
-import { links } from "@/utils/contants";
+import { links } from "@/lib/utils/contants";
 
 const Register = () => {
   // Hooks
@@ -14,10 +25,22 @@ const Register = () => {
   const [visible, { toggle }] = useDisclosure(false);
   const router = useRouter();
   const form = useForm({
+    initialValues: {
+      username: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
+    },
     validate: {
-      username: hasLength({ min: 5, max: 15 }, "Username must be 5-15 characters long."),
+      username: hasLength(
+        { min: 5, max: 15 },
+        "Username must be 5-15 characters long."
+      ),
       email: isEmail("Invalid Email."),
-      password: hasLength({ min: 6, max: 25 }, "Password must be 6-25 characters long."),
+      password: hasLength(
+        { min: 6, max: 25 },
+        "Password must be 6-25 characters long."
+      ),
       confirmPassword: matchesField("password", "Passwords do not match."),
     },
   });
@@ -28,14 +51,23 @@ const Register = () => {
   // Functions
 
   const handleSubmit = async (values: any) => {
-    const { error }: any = await signUp(values.username, values.email, values.password);
+    const { errors, error }: any = await signUp(
+      values.username,
+      values.email,
+      values.password
+    );
 
     if (error) {
-      if (error.code === "auth/email-already-in-use") {
-        form.setErrors({ email: "Email already exists." });
-      }
-
       return console.log(error);
+    }
+
+    if (errors) {
+      form.setErrors({
+        username: errors.username,
+        email: errors.email,
+      });
+
+      return;
     }
 
     return router.push(links.dashboard);
@@ -54,10 +86,35 @@ const Register = () => {
           })}
         >
           <Stack gap="sm">
-            <TextInput label="Username" placeholder="Your username here" withAsterisk {...form.getInputProps("username")} />
-            <TextInput label="Email" leftSection={email_icon} placeholder="Your email here" withAsterisk {...form.getInputProps("email")} />
-            <PasswordInput label="Password" placeholder="Your password here" visible={visible} onVisibilityChange={toggle} withAsterisk {...form.getInputProps("password")} />
-            <PasswordInput label="Confirm Password" placeholder="Repeat your password here" visible={visible} onVisibilityChange={toggle} withAsterisk {...form.getInputProps("confirmPassword")} />
+            <TextInput
+              label="Username"
+              placeholder="Your username here"
+              withAsterisk
+              {...form.getInputProps("username")}
+            />
+            <TextInput
+              label="Email"
+              leftSection={email_icon}
+              placeholder="Your email here"
+              withAsterisk
+              {...form.getInputProps("email")}
+            />
+            <PasswordInput
+              label="Password"
+              placeholder="Your password here"
+              visible={visible}
+              onVisibilityChange={toggle}
+              withAsterisk
+              {...form.getInputProps("password")}
+            />
+            <PasswordInput
+              label="Confirm Password"
+              placeholder="Repeat your password here"
+              visible={visible}
+              onVisibilityChange={toggle}
+              withAsterisk
+              {...form.getInputProps("confirmPassword")}
+            />
           </Stack>
           <Group justify="center" mt={20}>
             <Button type="submit">Create Account</Button>

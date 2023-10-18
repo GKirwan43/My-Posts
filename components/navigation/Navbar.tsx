@@ -2,7 +2,7 @@ import { Box, Button, Divider, Group, Menu, Text } from "@mantine/core";
 import Link from "next/link";
 import { useDisclosure } from "@mantine/hooks";
 import { Burger } from "@mantine/core";
-import { links } from "@/utils/contants";
+import { links } from "@/lib/utils/contants";
 import Logo from "../Logo";
 
 const Navbar = () => {
@@ -23,7 +23,12 @@ const Navbar = () => {
           </Group>
           <Menu>
             <Menu.Target>
-              <Burger hiddenFrom="sm" opened={opened} onClick={toggle} aria-label="Toggle navigation" />
+              <Burger
+                hiddenFrom="sm"
+                opened={opened}
+                onClick={toggle}
+                aria-label="Toggle navigation"
+              />
             </Menu.Target>
 
             <Menu.Dropdown>
