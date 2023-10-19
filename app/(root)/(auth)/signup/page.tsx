@@ -15,9 +15,9 @@ import {
 import { useForm, hasLength, isEmail, matchesField } from "@mantine/form";
 import { useDisclosure, useViewportSize } from "@mantine/hooks";
 import { IconAt } from "@tabler/icons-react";
-import signUp from "@/lib/firebase/auth/signup";
 import { useRouter } from "next/navigation";
 import { links } from "@/lib/utils/contants";
+import signUp from "@/lib/utils/services/auth/signup";
 
 const Register = () => {
   // Hooks
@@ -51,26 +51,22 @@ const Register = () => {
   // Functions
 
   const handleSubmit = async (values: any) => {
-    const { errors, error }: any = await signUp(
-      values.username,
-      values.email,
-      values.password
-    );
+    const res = await signUp(values.username, values.email, values.password);
+    const error = res?.error;
+    const errorMessages = res?.errorMessages;
 
     if (error) {
-      return console.log(error);
+      return console.log("An error occured"); // Remove when error notification are implemented
     }
 
-    if (errors) {
+    if (errorMessages) {
       form.setErrors({
-        username: errors.username,
-        email: errors.email,
+        username: errorMessages.username,
+        email: errorMessages.email,
       });
 
       return;
     }
-
-    return router.push(links.dashboard);
   };
 
   return (

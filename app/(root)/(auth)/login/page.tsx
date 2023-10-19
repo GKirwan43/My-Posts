@@ -14,8 +14,7 @@ import {
 } from "@mantine/core";
 import { hasLength, useForm } from "@mantine/form";
 import { useDisclosure, useViewportSize } from "@mantine/hooks";
-import { IconAt } from "@tabler/icons-react";
-import signIn from "@/lib/firebase/auth/signin";
+import signIn from "@/lib/utils/services/auth/signin";
 import { useRouter } from "next/navigation";
 import { links } from "@/lib/utils/contants";
 
@@ -26,41 +25,32 @@ const Register = () => {
   const router = useRouter();
   const form = useForm({
     initialValues: {
-      email: "",
+      username: "",
       password: "",
     },
     validate: {
-      email: hasLength({ min: 1 }, "Email required."),
+      username: hasLength({ min: 1 }, "Username Email required."),
       password: hasLength({ min: 1 }, "Password required."),
     },
   });
 
-  // Icons
-  const email_icon = <IconAt style={{ width: rem(16), height: rem(16) }} />;
-
   // Functions
-
   const handleSubmit = async (values: any) => {
-    const { error }: any = await signIn(values.email, values.password);
+    const res = await signIn(values.username, values.password);
+    const error = res?.error;
+    const errorMessages = res?.errorMessages;
 
     if (error) {
-      if (
-        error.code === "auth/invalid-login-credentials" ||
-        error.code === "auth/invalid-email"
-      ) {
-        form.setErrors({
-          email: " ",
-          password: "Email or password Incorrect.",
-        });
-      } else if (error.code === "auth/too-many-requests") {
-        form.setErrors({
-          email: " ",
-          password:
-            "Access to this account has been temporarily disabled due to many failed login attempts. You can immediately restore it by resetting your password or you can try again later.",
-        });
-      }
-
       return console.log(error);
+    }
+
+    if (errorMessages) {
+      form.setErrors({
+        username: " ",
+        password: errorMessages.password,
+      });
+
+      return;
     }
 
     return router.push(links.dashboard);
@@ -80,11 +70,10 @@ const Register = () => {
         >
           <Stack gap="sm">
             <TextInput
-              label="Email"
-              leftSection={email_icon}
-              placeholder="Your email here"
+              label="Username or Email"
+              placeholder="Your username or email here"
               withAsterisk
-              {...form.getInputProps("email")}
+              {...form.getInputProps("username")}
             />
             <PasswordInput
               label="Password"
