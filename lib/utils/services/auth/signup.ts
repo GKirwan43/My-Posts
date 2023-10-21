@@ -28,7 +28,7 @@ export default async function signUp(username: string, email: string, password: 
         }
 
         // Create account with firebase
-        await signUpWithFirebaseAuth(username, email, password)
+        await signUpWithFirebaseAuth(data.token, password)
 
         return
     } catch (e) {

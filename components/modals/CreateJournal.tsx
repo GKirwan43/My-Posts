@@ -1,7 +1,8 @@
 "use client";
 
+import { createJournal } from "@/lib/utils/services/journal/createJournal";
 import { Modal, TextInput, Button, Stack, Flex, Textarea } from "@mantine/core";
-import { useForm } from "@mantine/form";
+import { hasLength, useForm } from "@mantine/form";
 
 interface props {
   opened: boolean;
@@ -9,9 +10,26 @@ interface props {
 }
 
 const CreateJournal = ({ opened, close }: props) => {
-  const form = useForm({});
+  const form = useForm({
+    initialValues: {
+      title: "",
+      description: "",
+    },
+    validate: {
+      title: hasLength(
+        { min: 1, max: 50 },
+        "Title must be 1-50 characters long."
+      ),
+      description: hasLength(
+        { max: 250 },
+        "Description can not be longer than 250 characters."
+      ),
+    },
+  });
 
   const handleSubmit = (values: any) => {
+    createJournal(values.title, values.description);
+
     close();
   };
 
@@ -25,6 +43,7 @@ const CreateJournal = ({ opened, close }: props) => {
             placeholder="Your journals title here."
             maxLength={50}
             withAsterisk
+            {...form.getInputProps("title")}
           />
           <Textarea
             label="Description"
@@ -33,6 +52,7 @@ const CreateJournal = ({ opened, close }: props) => {
             minRows={3}
             maxLength={250}
             autosize
+            {...form.getInputProps("description")}
           />
           <Flex justify="flex-end" w="100%">
             <Button type="submit">Create</Button>

@@ -8,6 +8,10 @@ const journalSchema = new Schema({
         required: true,
         unique: true,
     },
+    uid: {
+        type: String,
+        required: true,
+    },
     title: {
         type: String,
     },

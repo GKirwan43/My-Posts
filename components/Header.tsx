@@ -1,6 +1,5 @@
 import { Box, Burger, Button, Center, Flex, Group } from "@mantine/core";
 import Logo from "./Logo";
-import signOut from "@/lib/firebase/auth/signout";
 import { links } from "@/lib/utils/contants";
 
 interface props {

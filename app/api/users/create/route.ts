@@ -1,10 +1,11 @@
 import User from "@/lib/mongoose/models/User";
 import { NextRequest, NextResponse } from "next/server";
 import connect from "@/lib/mongoose/db";
-import { v4 as uuidv4 } from 'uuid';
+import getFirebaseAuth from "@/lib/firebase/admin"
 
 export const POST = async (req: NextRequest) => {
     try {
+        const auth = getFirebaseAuth();
         await connect();
         
         const data = await req.json();
@@ -27,14 +28,19 @@ export const POST = async (req: NextRequest) => {
             return NextResponse.json({ errorMessages: errors }, { status: 400 })
         }
 
-        // Create user id, different from firebase auth
-        const userid = uuidv4();
+        const firebaseUser = await auth.createUser({
+            email: data.email,
+            emailVerified: false,
+            displayName: data.username,
+        })
+        const token = await auth.createCustomToken(firebaseUser.uid);
+        const uid = firebaseUser.uid;
 
         // Create user in database
-        const user = new User({userid, ...data});
+        const user = new User({uid, ...data});
         await user.save();
     
-        return NextResponse.json({ error: "Account created successfully" }, {status: 201})
+        return NextResponse.json({ token }, {status: 201})
     } catch (e) {
         return NextResponse.json({ error: "An error occurred trying to create account" }, { status: 500 })
     }

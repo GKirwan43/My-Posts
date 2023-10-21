@@ -1,7 +1,6 @@
 "use client";
 
 const { version } = require("@/package.json");
-import signOut from "@/lib/firebase/auth/signout";
 import { links } from "@/lib/utils/contants";
 import { Box, Divider, NavLink, Stack, Text } from "@mantine/core";
 import {
@@ -17,6 +16,7 @@ import { usePathname } from "next/navigation";
 import Settings from "../modals/Settings";
 import { useDisclosure } from "@mantine/hooks";
 import CreateJournal from "../modals/CreateJournal";
+import signOut from "@/lib/utils/services/auth/signout";
 
 const AppNavbar = () => {
   const [settingsOpened, { open: openSettings, close: closeSettings }] =
