@@ -14,13 +14,13 @@ export default async function signUp(username: string, email: string, password: 
             })
         })
 
-        // If response is not ok or response status is not 400, throw error
-        if (!res.ok && res.status !== 400) {
-            throw new Error("Could not create account")
-        }
-
         // Read data from response
         const data = await res.json()
+
+        // If response is not ok or response status is not 400, throw error
+        if (!res.ok && res.status !== 400) {
+            throw new Error("Could not create account.")
+        }
         
         // If response status is 400, then return error messages
         if (res.status === 400) {
@@ -31,7 +31,7 @@ export default async function signUp(username: string, email: string, password: 
         await signUpWithFirebaseAuth(data.token, password)
 
         return
-    } catch (e) {
-        return { error: e }
+    } catch (e: any) {
+        return { error: e.message }
     }
 }

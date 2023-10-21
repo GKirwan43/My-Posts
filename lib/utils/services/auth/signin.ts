@@ -14,7 +14,7 @@ export default async function signIn(usernameOrEmail: string, password: string) 
 
         // If response is not ok, throw error
         if (!res.ok && res.status !== 400) {
-            throw new Error("Could not log in")
+            throw new Error("Could not login.")
         }
 
         if (res.status === 400) {
@@ -37,11 +37,13 @@ export default async function signIn(usernameOrEmail: string, password: string) 
                 return { errorMessages: { password: "Username or password incorrect"} }
             } else if (e.code === "auth/too-many-requests") {
                 return { errorMessages: { password: "Access to this account has been temporarily disabled due to many failed login attempts. You can immediately restore it by resetting your password or you can try again later."} }
+            } else {
+                throw new Error("Could not login.")
             }
         }
 
         return
-    } catch (e) {
-        return { error: e }
+    } catch (e: any) {
+        return { error: e.message }
     }
 }

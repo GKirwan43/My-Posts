@@ -1,4 +1,6 @@
 import auth from "@/lib/firebase/config"
+import { showErrorNotification, showSuccessNotification } from "@/lib/mantine/notifications";
+import { modals } from "@mantine/modals";
 
 export const createJournal = async (title: string, description: string) => {
     try {
@@ -17,7 +19,20 @@ export const createJournal = async (title: string, description: string) => {
         })
 
         const data = await res.json()
-    } catch (e) {
-        console.log(e);
+
+
+        if (!res.ok) { 
+            throw new Error(data.error)
+        }
+
+        showSuccessNotification({ message: `Journal "${title}" has been created.` });
+
+        modals.close("create_journal");
+
+        return data
+    } catch (e: any) {
+        showErrorNotification({ message: e.message });
+
+        return;
     }   
 }

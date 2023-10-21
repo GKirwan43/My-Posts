@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import connect from "@/lib/mongoose/db";
 import getFirebaseAuth from "@/lib/firebase/admin"
 import Journal from "@/lib/mongoose/models/Journal";
-import { v4 as uuidv4 } from 'uuid';
+import { generateUniqueNumericId } from "@/lib/utils/idUtils"
 
 export const POST = async (req: NextRequest) => {
     try {
@@ -10,17 +10,24 @@ export const POST = async (req: NextRequest) => {
         
         const authHeader = req.headers.get("Authorization");
         const idToken = authHeader?.replace("Bearer ", "");
-        const decodedToken = await getFirebaseAuth().verifyIdToken(idToken)
+
+        let decodedToken;
+        
+        try {
+            decodedToken = await getFirebaseAuth().verifyIdToken(idToken)
+        } catch (e) {
+            return NextResponse.json({ error: "Not authorized." }, { status: 401 })
+        }
+
         const uid = decodedToken.uid;
-        const id = uuidv4();
-
+        const postid = generateUniqueNumericId();
         const data = await req.json()
+        const newJournal = new Journal({id: postid, uid, ...data})
 
-        const newJournal = new Journal({id, uid, ...data})
         await newJournal.save()
     
-        return NextResponse.json({ id }, {status: 201})
-    } catch (e) {
-        return NextResponse.json({ error: "An error occurred trying to create account" }, { status: 500 })
+        return NextResponse.json({ postid }, {status: 201})
+    } catch (e: any) {
+        return NextResponse.json({ error: "Could not create journal in database." }, { status: 500 })
     }
 }

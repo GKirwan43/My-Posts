@@ -1,11 +1,13 @@
 "use client";
 
 import {
+  Box,
   Button,
   Card,
   Center,
   Divider,
   Group,
+  LoadingOverlay,
   PasswordInput,
   Stack,
   TextInput,
@@ -15,15 +17,14 @@ import {
 import { useForm, hasLength, isEmail, matchesField } from "@mantine/form";
 import { useDisclosure, useViewportSize } from "@mantine/hooks";
 import { IconAt } from "@tabler/icons-react";
-import { useRouter } from "next/navigation";
-import { links } from "@/lib/utils/contants";
 import signUp from "@/lib/utils/services/auth/signup";
 
 const Register = () => {
   // Hooks
   const { height } = useViewportSize();
-  const [visible, { toggle }] = useDisclosure(false);
-  const router = useRouter();
+  const [passwordVisible, { toggle: togglePassword }] = useDisclosure(false);
+  const [loadingVisible, { open: setLoading, close: setNotLoading }] =
+    useDisclosure(false);
   const form = useForm({
     initialValues: {
       username: "",
@@ -51,12 +52,19 @@ const Register = () => {
   // Functions
 
   const handleSubmit = async (values: any) => {
+    setLoading();
+
     const res = await signUp(values.username, values.email, values.password);
     const error = res?.error;
     const errorMessages = res?.errorMessages;
 
     if (error) {
-      return console.log("An error occured"); // Remove when error notification are implemented
+      form.setErrors({
+        username: " ",
+        email: " ",
+        password: " ",
+        confirmPassword: error,
+      });
     }
 
     if (errorMessages) {
@@ -64,60 +72,67 @@ const Register = () => {
         username: errorMessages.username,
         email: errorMessages.email,
       });
-
-      return;
     }
+
+    setNotLoading();
   };
 
   return (
-    <Center h={height - 100}>
-      <Card shadow="sm" padding="lg" radius="md" w={rem(300)} withBorder>
-        <Title size="h3" ta="center">
-          Create Account
-        </Title>
-        <Divider my="sm" />
-        <form
-          onSubmit={form.onSubmit((values) => {
-            handleSubmit(values);
-          })}
-        >
-          <Stack gap="sm">
-            <TextInput
-              label="Username"
-              placeholder="Your username here"
-              withAsterisk
-              {...form.getInputProps("username")}
-            />
-            <TextInput
-              label="Email"
-              leftSection={email_icon}
-              placeholder="Your email here"
-              withAsterisk
-              {...form.getInputProps("email")}
-            />
-            <PasswordInput
-              label="Password"
-              placeholder="Your password here"
-              visible={visible}
-              onVisibilityChange={toggle}
-              withAsterisk
-              {...form.getInputProps("password")}
-            />
-            <PasswordInput
-              label="Confirm Password"
-              placeholder="Repeat your password here"
-              visible={visible}
-              onVisibilityChange={toggle}
-              withAsterisk
-              {...form.getInputProps("confirmPassword")}
-            />
-          </Stack>
-          <Group justify="center" mt={20}>
-            <Button type="submit">Create Account</Button>
-          </Group>
-        </form>
-      </Card>
-    </Center>
+    <Box pos="relative">
+      <LoadingOverlay
+        visible={loadingVisible}
+        zIndex={1000}
+        overlayProps={{ radius: "sm", blur: 2 }}
+      />
+      <Center h={height - 100}>
+        <Card shadow="sm" padding="lg" radius="md" w={rem(300)} withBorder>
+          <Title size="h3" ta="center">
+            Create Account
+          </Title>
+          <Divider my="sm" />
+          <form
+            onSubmit={form.onSubmit((values) => {
+              handleSubmit(values);
+            })}
+          >
+            <Stack gap="sm">
+              <TextInput
+                label="Username"
+                placeholder="Your username here"
+                withAsterisk
+                {...form.getInputProps("username")}
+              />
+              <TextInput
+                label="Email"
+                leftSection={email_icon}
+                placeholder="Your email here"
+                withAsterisk
+                {...form.getInputProps("email")}
+              />
+              <PasswordInput
+                label="Password"
+                placeholder="Your password here"
+                visible={passwordVisible}
+                onVisibilityChange={togglePassword}
+                withAsterisk
+                {...form.getInputProps("password")}
+              />
+              <PasswordInput
+                label="Confirm Password"
+                placeholder="Repeat your password here"
+                visible={passwordVisible}
+                onVisibilityChange={togglePassword}
+                withAsterisk
+                {...form.getInputProps("confirmPassword")}
+              />
+            </Stack>
+            <Group justify="center" mt={20}>
+              <Button type="submit">Create Account</Button>
+            </Group>
+          </form>
+        </Card>
+      </Center>
+    </Box>
   );
 };
 

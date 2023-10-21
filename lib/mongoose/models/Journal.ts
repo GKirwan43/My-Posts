@@ -13,10 +13,14 @@ const journalSchema = new Schema({
         required: true,
     },
     title: {
+        required: true,
         type: String,
+        minLength: 1,
+        maxLength: 50,
     },
     description: {
         type: String,
+        maxLength: 500
     },
 }, {timestamps: true})
 

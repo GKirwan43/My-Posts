@@ -13,18 +13,13 @@ import {
 } from "@tabler/icons-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import Settings from "../modals/Settings";
-import { useDisclosure } from "@mantine/hooks";
-import CreateJournal from "../modals/CreateJournal";
 import signOut from "@/lib/utils/services/auth/signout";
+import {
+  openCreateJournalModal,
+  openSettingsModal,
+} from "@/lib/mantine/modals";
 
 const AppNavbar = () => {
-  const [settingsOpened, { open: openSettings, close: closeSettings }] =
-    useDisclosure(false);
-  const [
-    createJournalOpened,
-    { open: openCreateJournal, close: closeCreateJournal },
-  ] = useDisclosure(false);
   const pathname = usePathname();
 
   return (
@@ -48,11 +43,7 @@ const AppNavbar = () => {
             leftSection={<IconPlus />}
             active
             variant="subtle"
-            onClick={() => openCreateJournal()}
-          />
-          <CreateJournal
-            opened={createJournalOpened}
-            close={closeCreateJournal}
+            onClick={openCreateJournalModal}
           />
         </NavLink>
       </Box>
@@ -61,9 +52,8 @@ const AppNavbar = () => {
           <NavLink
             label="Settings"
             leftSection={<IconSettings />}
-            onClick={() => openSettings()}
+            onClick={openSettingsModal}
           />
-          <Settings opened={settingsOpened} close={closeSettings} />
           <NavLink
             label="Logout"
             leftSection={<IconDoorEnter />}
