@@ -18,9 +18,14 @@ import {
   openCreateJournalModal,
   openSettingsModal,
 } from "@/lib/mantine/modals";
+import {
+  JournalContextProvider,
+  useJournalContext,
+} from "@/context/JournalContextProvider";
 
 const AppNavbar = () => {
   const pathname = usePathname();
+  const { journals } = useJournalContext();
 
   return (
     <Stack justify="space-between" h="100%">
@@ -45,6 +50,11 @@ const AppNavbar = () => {
             variant="subtle"
             onClick={openCreateJournalModal}
           />
+          <JournalContextProvider>
+            {journals.map((journal) => (
+              <NavLink label={journal.title} onClick={() => {}} />
+            ))}
+          </JournalContextProvider>
         </NavLink>
       </Box>
       <Box px="md" py="sm">

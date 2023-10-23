@@ -14,7 +14,7 @@ export const POST = async (req: NextRequest) => {
         let decodedToken;
         
         try {
-            decodedToken = await getFirebaseAuth().verifyIdToken(idToken)
+            decodedToken = await getFirebaseAuth().verifyIdToken(idToken as string)
         } catch (e) {
             return NextResponse.json({ error: "Not authorized." }, { status: 401 })
         }
