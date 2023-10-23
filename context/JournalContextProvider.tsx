@@ -13,15 +13,11 @@ export const JournalContextProvider = ({ children }: any) => {
 
   useEffect(() => {
     refreshJournals();
-  });
+  }, []);
 
   const refreshJournals = async () => {
     setJournals(await getJournals());
   };
 
-  return (
-    <JournalContext.Provider value={{ journals, refreshJournals }}>
-      {children}
-    </JournalContext.Provider>
-  );
+  return <JournalContext.Provider value={{ journals, refreshJournals }}>{children}</JournalContext.Provider>;
 };

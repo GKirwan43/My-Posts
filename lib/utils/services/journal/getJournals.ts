@@ -1,27 +1,35 @@
-import auth from "@/lib/firebase/config"
+import auth from "@/lib/firebase/config";
 
 export const getJournals = async (id?: string) => {
-    try {
-        const user = await auth.currentUser;
-        const idToken = user?.getIdToken(true);
-        const uid = user?.uid;
+  try {
+    const user = await auth.currentUser;
+    const idToken = user?.getIdToken(true);
+    const uid = user?.uid;
 
-        const res = await fetch(`/api/journals?id=${id}&uid=${uid}`, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${idToken}`
-            }
-        })
+    let url;
 
-        if (!res.ok) { 
-            throw new Error(res.statusText)
-        }
+    if (id) {
+      url = `/api/journals?id=${id}`;
+    } else {
+      url = `/api/journals?uid=${uid}`;
+    }
 
-        const data = await res.json()
+    const res = await fetch(url, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${idToken}`,
+      },
+    });
 
-        return data
-    } catch (e: any) {
-        return [];
-    }   
-}
+    if (!res.ok) {
+      throw new Error(res.statusText);
+    }
+
+    const data = await res.json();
+
+    return data;
+  } catch (e: any) {
+    return [];
+  }
+};
