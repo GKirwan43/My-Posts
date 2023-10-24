@@ -1,9 +1,6 @@
 "use client";
 
-import {
-  showErrorNotification,
-  showSuccessNotification,
-} from "@/lib/mantine/notifications";
+import { useJournalContext } from "@/context/JournalContextProvider";
 import { createJournal } from "@/lib/utils/services/journal/createJournal";
 import {
   TextInput,
@@ -20,6 +17,7 @@ import { useDisclosure } from "@mantine/hooks";
 const CreateJournal = () => {
   const [loadingVisible, { open: setLoading, close: setNotLoading }] =
     useDisclosure(false);
+  const { refreshJournals }: any = useJournalContext();
 
   const form = useForm({
     initialValues: {
@@ -42,6 +40,7 @@ const CreateJournal = () => {
     setLoading();
 
     const res = await createJournal(values.title, values.description);
+    await refreshJournals();
 
     setNotLoading();
   };

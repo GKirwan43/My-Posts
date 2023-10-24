@@ -3,7 +3,7 @@ import auth from "@/lib/firebase/config";
 export const getJournals = async (id?: string) => {
   try {
     const user = await auth.currentUser;
-    const idToken = user?.getIdToken(true);
+    const idToken = await user?.getIdToken(true);
     const uid = user?.uid;
 
     let url;
