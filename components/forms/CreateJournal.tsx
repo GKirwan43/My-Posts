@@ -13,6 +13,7 @@ import {
 } from "@mantine/core";
 import { hasLength, useForm } from "@mantine/form";
 import { useDisclosure } from "@mantine/hooks";
+import { modals } from "@mantine/modals";
 
 const CreateJournal = () => {
   const [loadingVisible, { open: setLoading, close: setNotLoading }] =
@@ -43,6 +44,10 @@ const CreateJournal = () => {
     await refreshJournals();
 
     setNotLoading();
+
+    if (!res.error) {
+      modals.close("create_journal");
+    }
   };
 
   return (

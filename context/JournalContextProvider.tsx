@@ -1,7 +1,6 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState } from "react";
-import { Journal } from "@/lib/utils/interfaces";
 import { getJournals } from "@/lib/utils/services/journal/getJournals";
 import { useAuthContext } from "./AuthContextProvider";
 
@@ -11,11 +10,13 @@ export const useJournalContext = () => useContext(JournalContext);
 
 export const JournalContextProvider = ({ children }: any) => {
   const { user }: any = useAuthContext();
-  const [journals, setJournals] = useState<Journal[]>([]);
+  const [journals, setJournals] = useState([]);
 
   useEffect(() => {
     if (user) {
       refreshJournals();
+    } else {
+      setJournals([]);
     }
   }, [user]);
 

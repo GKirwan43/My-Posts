@@ -1,22 +1,20 @@
 "use client";
 
-import { useAuthContext } from "@/context/AuthContextProvider";
-import signOut from "@/lib/firebase/auth/signout";
-import { Journal } from "@/lib/utils/interfaces";
-import { getJournals } from "@/lib/utils/services/journal/getJournals";
+import { useUserContext } from "@/context/UserContextProvider";
 import { Text, Title } from "@mantine/core";
-import { useState } from "react";
 
 const User = () => {
-  const { user }: any = useAuthContext();
+  const { userData }: any = useUserContext();
 
-  return (
-    user && (
-      <>
-        <Title>Dashboard</Title>
-        <Text>Welcome back, {user.displayName}</Text>
-      </>
-    )
+  return userData ? (
+    <>
+      <Title>Dashboard</Title>
+      <Text>Welcome back, {userData?.username}</Text>
+      <Text>Email: {userData?.email}</Text>
+      <Text>Uid: {userData?.uid}</Text>
+    </>
+  ) : (
+    <Text>Loading...</Text>
   );
 };
 

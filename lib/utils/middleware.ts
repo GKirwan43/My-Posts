@@ -8,6 +8,6 @@ export const getUser = async (req: NextRequest) => {
     try {
         return await getFirebaseAuth().verifyIdToken(idToken as string)
     } catch (e) {
-        throw new Error("Not authorized")
+        throw new Error("Invalid ID Token.")
     }
 }

@@ -11,6 +11,7 @@ import { ModalsProvider } from "@mantine/modals";
 import { Notifications } from "@mantine/notifications";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import { UserContextProvider } from "@/context/UserContextProvider";
 
 export default function RootLayout({
   children,
@@ -28,29 +29,31 @@ export default function RootLayout({
   }, [user]);
 
   return (
-    <JournalContextProvider>
-      <MantineProvider theme={theme}>
-        <Notifications />
-        <ModalsProvider>
-          <AppShell
-            padding="md"
-            header={{ height: 60 }}
-            navbar={{
-              width: { sm: 250, lg: 300 },
-              breakpoint: "sm",
-              collapsed: { mobile: !navOpened },
-            }}
-          >
-            <AppShell.Header>
-              <Header isNavOpen={navOpened} toggleNav={toggleNav} />
-            </AppShell.Header>
-            <AppShell.Navbar>
-              <AppNavbar />
-            </AppShell.Navbar>
-            <AppShell.Main>{children}</AppShell.Main>
-          </AppShell>
-        </ModalsProvider>
-      </MantineProvider>
-    </JournalContextProvider>
+    <MantineProvider theme={theme}>
+      <UserContextProvider>
+        <JournalContextProvider>
+          <Notifications />
+          <ModalsProvider>
+            <AppShell
+              padding="md"
+              header={{ height: 60 }}
+              navbar={{
+                width: { sm: 250, lg: 300 },
+                breakpoint: "sm",
+                collapsed: { mobile: !navOpened },
+              }}
+            >
+              <AppShell.Header>
+                <Header isNavOpen={navOpened} toggleNav={toggleNav} />
+              </AppShell.Header>
+              <AppShell.Navbar>
+                <AppNavbar />
+              </AppShell.Navbar>
+              <AppShell.Main>{children}</AppShell.Main>
+            </AppShell>
+          </ModalsProvider>
+        </JournalContextProvider>
+      </UserContextProvider>
+    </MantineProvider>
   );
 }
