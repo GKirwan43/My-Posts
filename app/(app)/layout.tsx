@@ -4,7 +4,7 @@ import Header from "@/components/Header";
 import AppNavbar from "@/components/navigation/AppNavbar";
 import { useAuthContext } from "@/context/AuthContextProvider";
 import { JournalContextProvider } from "@/context/JournalContextProvider";
-import { AppShell, MantineProvider } from "@mantine/core";
+import { AppShell, Container, MantineProvider } from "@mantine/core";
 import { theme } from "@/lib/mantine/theme";
 import { useDisclosure } from "@mantine/hooks";
 import { ModalsProvider } from "@mantine/modals";
@@ -49,7 +49,9 @@ export default function RootLayout({
               <AppShell.Navbar>
                 <AppNavbar />
               </AppShell.Navbar>
-              <AppShell.Main>{children}</AppShell.Main>
+              <AppShell.Main>
+                <Container>{children}</Container>
+              </AppShell.Main>
             </AppShell>
           </ModalsProvider>
         </JournalContextProvider>

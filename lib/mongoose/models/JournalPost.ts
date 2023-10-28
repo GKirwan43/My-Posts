@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const {Schema} = mongoose;
 
-const journalSchema = new Schema({
+const journalPostSchema = new Schema({
     id: {
         type: String,
         required: true,
@@ -13,18 +13,15 @@ const journalSchema = new Schema({
         required: true,
     },
     title: {
-        required: true,
         type: String,
+        required: true,
         minLength: 1,
         maxLength: 50,
     },
-    description: {
+    post: {
         type: String,
-        maxLength: 500,
+        required: true,
     },
-    posts: {
-        type: [String],
-    }
-}, {timestamps: true})
+}, {timestamps: true});
 
-export default mongoose.models.Journal || mongoose.model("Journal", journalSchema)
+export default mongoose.models.JournalPost || mongoose.model("JournalPost", journalPostSchema)

@@ -8,20 +8,27 @@ export const GET = async (req: NextRequest) => {
     try {
         await connect();
 
-        const user = await getUser(req);
+        let user;
+
+        try {
+            user = await getUser(req);
+        } catch (e) {
+            return NextResponse.json({ error: e }, { status: 401 });
+        }
+
+        const uid = user.uid;
 
         const params = req.nextUrl.searchParams;
         const id = params.get("id");
-        const uid = params.get("uid")
 
         let journals = [];
         
         if (id) {
             journals = await Journal.find({
-                uid: user.uid,
+                uid,
                 id,
             });
-        } else if (uid == user.uid) {
+        } else {
             journals = await Journal.find({
                 uid
             });

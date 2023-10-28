@@ -19,65 +19,73 @@ import {
   openSettingsModal,
 } from "@/lib/mantine/modals";
 import { useJournalContext } from "@/context/JournalContextProvider";
+import { useElementSize, useViewportSize } from "@mantine/hooks";
+import { useEffect, useState } from "react";
 
 const AppNavbar = () => {
   const pathname = usePathname();
   const { journals }: any = useJournalContext();
-
+  const { ref: stackRef, height: stackHeight } = useElementSize();
+  const { ref: bottomLinksRef, height: bottomLinksHeight } = useElementSize();
   return (
     <>
-      {/* <Stack justify="space-between" h="100%"> */}
-      <Box px="md" py="sm">
-        <NavLink
-          component={Link}
-          href={links.dashboard}
-          label="Dashboard"
-          leftSection={<IconHome2 />}
-          active={pathname.includes("dashboard")}
-        />
-        <NavLink
-          label="Journals"
-          leftSection={<IconBook2 />}
-          rightSection={<IconChevronRight />}
-          defaultOpened
-        >
-          <ScrollArea.Autosize mah={500}>
+      <Stack justify="space-between" h="100%" ref={stackRef}>
+        <ScrollArea h={stackHeight - bottomLinksHeight}>
+          <Box px="md" py="sm">
             <NavLink
-              label="Create new"
-              leftSection={<IconPlus />}
-              active
-              variant="subtle"
-              onClick={openCreateJournalModal}
+              component={Link}
+              href={links.dashboard}
+              label="Dashboard"
+              leftSection={<IconHome2 />}
+              active={pathname.includes("dashboard")}
+              variant="filled"
             />
-            {journals.map((journal: any) => (
+            <NavLink
+              label="Journals"
+              leftSection={<IconBook2 />}
+              rightSection={<IconChevronRight />}
+              variant="filled"
+              active={pathname.includes("journal")}
+              defaultOpened
+            >
               <NavLink
-                label={journal.title}
-                onClick={() => {}}
-                key={journal.id}
+                label="Create new"
+                leftSection={<IconPlus />}
+                active
+                variant="subtle"
+                onClick={openCreateJournalModal}
               />
-            ))}
-          </ScrollArea.Autosize>
-        </NavLink>
-      </Box>
-      <Box px="md" py="sm" pos="absolute" bottom={0} w="100%" bg="white">
-        <Box my="md">
-          <NavLink
-            label="Settings"
-            leftSection={<IconSettings />}
-            onClick={openSettingsModal}
-          />
-          <NavLink
-            label="Logout"
-            leftSection={<IconDoorEnter />}
-            onClick={signOut}
-          />
+              {journals.map((journal: any) => (
+                <NavLink
+                  component={Link}
+                  label={journal.title}
+                  href={`/journal/${journal.id}`}
+                  key={journal.id}
+                  active={pathname.includes(`journal/${journal.id}`)}
+                />
+              ))}
+            </NavLink>
+          </Box>
+        </ScrollArea>
+        <Box px="md" py="sm" ref={bottomLinksRef}>
+          <Box my="md">
+            <NavLink
+              label="Settings"
+              leftSection={<IconSettings />}
+              onClick={openSettingsModal}
+            />
+            <NavLink
+              label="Logout"
+              leftSection={<IconDoorEnter />}
+              onClick={signOut}
+            />
+          </Box>
+          <Divider />
+          <Text size="sm" m="md">
+            Version: {version}
+          </Text>
         </Box>
-        <Divider />
-        <Text size="sm" m="md">
-          Version: {version}
-        </Text>
-      </Box>
-      {/* </Stack> */}
+      </Stack>
     </>
   );
 };
